@@ -21,6 +21,20 @@ local function exploring()
   return rq.dungeon.active()
 end
 
+local function agent_rect(id, x, y, w, h, label)
+  if not (rq.agent and rq.agent.control) then
+    return
+  end
+  rq.agent.control(id, { label = label, x = x, y = y, w = w, h = h })
+end
+
+local function agent_clear(id)
+  if not (rq.agent and rq.agent.control) then
+    return
+  end
+  rq.agent.control(id)
+end
+
 local function frame(x, y, w, h, r, g, b, a)
   a = a or 255
   rq.hud.rect(x, y, w, 3, r, g, b, a)
@@ -74,6 +88,8 @@ rq.on_frame(function()
   if not exploring() then
     open = false
     last_logged_n = -1
+    agent_clear("item-previews")
+    agent_clear("preview-close")
     return
   end
 
@@ -81,10 +97,12 @@ rq.on_frame(function()
   local bw, bh = 300, 36
   local bx = math.floor((sw - bw) / 2)
   local by = 8
+  agent_rect("item-previews", bx, by, bw, bh, "Item Previews")
   if button(bx, by, bw, bh, "Item Previews") then
     open = not open
   end
   if not open then
+    agent_clear("preview-close")
     return
   end
 
@@ -98,8 +116,10 @@ rq.on_frame(function()
   frame(px, py, pw, ph, 210, 190, 120, 255)
   rq.hud.rect(px + 3, py + 3, pw - 6, 40, 48, 36, 22, 255)
   label(px + 16, py + 12, "Item Previews", 20, { r = 255, g = 230, b = 160 })
+  agent_rect("preview-close", px + pw - 118, py + 8, 106, 30, "Close")
   if button(px + pw - 118, py + 8, 106, 30, "Close") then
     open = false
+    agent_clear("preview-close")
     return
   end
 

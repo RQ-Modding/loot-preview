@@ -4,7 +4,7 @@
 rq.log("Lua Item Previews HUD (lock-roll stays in the engine)")
 
 if not rq.loot.install() then
-  error("loot-preview: rq.loot.install failed (see mods/rqmod.log)")
+  error("loot-preview: rq.loot.install failed (see logs/rqmod.log)")
 end
 
 local open = false

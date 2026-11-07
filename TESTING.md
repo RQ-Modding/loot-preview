@@ -1,6 +1,6 @@
-# Item Previews — agent notes
+# Testing Loot Preview
 
-This file is optional. It is read only because this mod is installed. If this file is missing, or `item-previews` / `preview-close` are not in `rqmod-ctl ui`, the buttons are not there. Do not assume them, and do not look for them in the C dump. They are HUD rectangles this file registers with `rq.agent.control`.
+For people and agents who test the mod in the game. Read it before you use anything the mod adds. If this file is missing, or `item-previews` / `preview-close` are not in `rqmod-ctl ui`, the buttons are not there. Do not assume them, and do not look for them in the C dump. They are HUD rectangles the mod registers with `rq.agent.control`.
 
 ## When the buttons exist
 

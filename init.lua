@@ -1,5 +1,6 @@
 -- B+C loot-lock stays in the engine. This file owns the HUD:
--- top-middle "Item Previews" button + Quest Storage-like grid.
+-- top-middle "Item Previews" button + a grid of the game's item tiles, each with the game's item
+-- card as its tip (rq.uikit.item_icon, loader 2.21.0).
 
 rq.log("Lua Item Previews HUD (lock-roll stays in the engine)")
 
@@ -11,7 +12,7 @@ local open = false
 local last_logged_n = -1
 local COLS = 5
 local ROWS = 3
-local ICON = 96
+local ICON = 100 -- the game's item tile
 local GAP = 8
 
 local function exploring()
@@ -62,28 +63,6 @@ local function button(x, y, w, h, text)
   return rq.hud.clicked(x, y, w, h)
 end
 
-local function wrap_lines(s, max_px, size)
-  s = tostring(s or "")
-  if s == "" then
-    return {}
-  end
-  if rq.hud.wrap then
-    return rq.hud.wrap(s, max_px, size)
-  end
-  local out = {}
-  s = s:gsub("\r\n", "\n"):gsub("\r", "\n")
-  for para in (s .. "\n"):gmatch("(.-)\n") do
-    while #para > 40 do
-      out[#out + 1] = para:sub(1, 40)
-      para = para:sub(41)
-    end
-    if para ~= "" then
-      out[#out + 1] = para
-    end
-  end
-  return out
-end
-
 rq.on_frame(function()
   if not exploring() then
     open = false
@@ -109,7 +88,7 @@ rq.on_frame(function()
   rq.hud.block_game_input()
   rq.hud.rect(0, 0, sw, sh, 0, 0, 0, 150)
 
-  local pw, ph = 580, 430
+  local pw, ph = 580, 420
   local px = math.floor((sw - pw) / 2)
   local py = 56
   rq.hud.rect(px, py, pw, ph, 18, 16, 28, 240)
@@ -131,7 +110,6 @@ rq.on_frame(function()
   end
   local ox = px + 24
   local oy = py + 56
-  local hover = nil
   if n == 0 then
     label(ox, oy, "No locked chests or Magnum prize yet.", 16)
     return
@@ -144,50 +122,14 @@ rq.on_frame(function()
     end
     local ix = ox + col * (ICON + GAP)
     local iy = oy + row * (ICON + GAP)
-    local hot = rq.hud.hit(ix, iy, ICON, ICON)
     rq.hud.rect(ix, iy, ICON, ICON, 10, 10, 16, 230)
-    if hot then
-      frame(ix, iy, ICON, ICON, 255, 220, 120, 255)
-    else
-      frame(ix, iy, ICON, ICON, 80, 70, 50, 255)
-    end
-    if it.cg and it.cg > 0 then
-      rq.hud.cg(ix + 2, iy + 2, it.cg)
-    end
+    -- An item not seen yet: the game's "?" icon and its UNIDENTIFIED card, never the real one.
+    local item = it.seen and it.id or { icon = it.cg, rank = 0, name = "Unidentified item" }
+    rq.uikit.item_icon(item, { x = ix, y = iy, id = "loot-" .. i, judged = it.seen })
     if it.source == "magnum" then
-      label(ix + 4, iy + ICON - 18, "Magnum", 12, { r = 255, g = 220, b = 80 })
-    end
-    if hot then
-      hover = it
+      -- Top left: the rank badge sits at the bottom left.
+      label(ix + 4, iy + 3, "Magnum", 12, { r = 255, g = 220, b = 80 })
     end
   end
-
-  local tx = px + 12
-  local ty = py + ph - 104
-  local tw = pw - 24
-  local th = 92
-  -- 3px frame + 10px label pad + 1px shadow; pixel wrap vs this inner width
-  local inner = tw - 32
-  rq.hud.rect(tx, ty, tw, th, 8, 8, 14, 235)
-  frame(tx, ty, tw, th, 160, 140, 90, 255)
-  if hover then
-    local title = hover.name or "Unidentified item"
-    if hover.source == "magnum" then
-      title = title .. "  (Magnum)"
-    end
-    local titles = wrap_lines(title, inner, 16)
-    label(tx + 10, ty + 8, titles[1] or title, 16, { r = 255, g = 240, b = 200 })
-    local body = hover.comment or ""
-    if not hover.seen then
-      body = "You have not identified this item yet."
-    end
-    local lines = wrap_lines(body, inner, 14)
-    local ly = ty + 30
-    for i = 1, math.min(3, #lines) do
-      label(tx + 10, ly, lines[i], 14, { r = 210, g = 210, b = 220 })
-      ly = ly + 18
-    end
-  else
-    label(tx + 10, ty + 34, "Hover an item for name and details.", 16)
-  end
+  label(px + 16, py + ph - 30, "Hover an item to see its card.", 15, { r = 200, g = 200, b = 210 })
 end)

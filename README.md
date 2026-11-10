@@ -8,7 +8,8 @@ Shows what the chests of the dungeon room hold before you open them.
   advance. Red chests keep the game's chance and still explode on a fail, which loses the item.
 - While you walk a dungeon map, an **Item Previews** button sits at the top middle of the screen. It
   opens a grid of the items waiting in the room's chests, and the Magnum's when it holds one.
-- Hover an item for its name and text. An item you have not identified yet says so instead.
+- The items are the game's own tiles. Hover one for the game's item card, as on the status page. An
+  item you have not identified yet shows the game's UNIDENTIFIED card, with no name or stats.
 - **Close** closes the grid. While the grid is open, the game does not take input.
 
 ## Keys and settings
@@ -26,7 +27,7 @@ chest pool.
 
 ## Install
 
-Needs [RQ MOD](https://github.com/RQ-Modding/RQ-Mod) with loader **0.2.0** or newer. Extract the
+Needs [RQ MOD](https://github.com/RQ-Modding/RQ-Mod) with loader **2.21.0** or newer. Extract the
 release zip into the game's `mods` folder, so that you have `mods/loot-preview/mod.json`.
 
 ## License

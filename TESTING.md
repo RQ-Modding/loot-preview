@@ -12,11 +12,14 @@ For people and agents who test the mod in the game. Read it before you use anyth
 | --- | --- | --- |
 | `item-previews` | Item Previews | toggles the chest grid for the current room |
 | `preview-close` | Close | closes the grid |
+| `item-loot-<n>` | the item's name ("Unidentified item" when not seen) | the nth item's tile, a kit widget (type `item`, its ii as `value` when seen) |
 
-Both are rects (`x`, `y`, `w`, `h`), not `T_Button` handles. `hover` / `press` click the rectangle.
+`item-previews` and `preview-close` are rects (`x`, `y`, `w`, `h`), not `T_Button` handles. `hover` / `press` click the rectangle. The tiles are listed by the kit. After 500 ms of `hover` on a tile its card shows, listed as type `card` (it takes no click).
 
 ## Layout
 
-Screen size comes from `rq.hud.screen()`. The open button is 300×36, centered, `y = 8`. On a 1024×768 view that is `x = 362`. Close is 106×30 inside the panel, at the panel’s top right (`panel_x + panel_w - 118`, `panel_y + 8`). The panel is 580×430, centered, `y = 56`. Confirm `x` / `y` from the live `ui` row.
+Screen size comes from `rq.hud.screen()`. The open button is 300×36, centered, `y = 8`. On a 1024×768 view that is `x = 362`. Close is 106×30 inside the panel, at the panel’s top right (`panel_x + panel_w - 118`, `panel_y + 8`). The panel is 580×420, centered, `y = 56`. Confirm `x` / `y` from the live `ui` row.
+
+The tiles are 100×100, 108 apart, five to a row, three rows, from the panel's x + 24, y + 56.
 
 Opening the grid blocks game input until Close. Quest Storage is a different, vanilla button.
